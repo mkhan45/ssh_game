@@ -24,3 +24,5 @@ ssh_ttt-*.tar
 
 # Temporary files, for example, from tests.
 /tmp/
+
+ssh_dir/

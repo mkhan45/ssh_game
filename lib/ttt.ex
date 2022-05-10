@@ -45,6 +45,10 @@ defmodule TTT do
     game
   end
 
+  def draw(game) do
+    game.board |> :array.to_list |> Enum.count(& &1 != :empty) == 9
+  end
+
   def winner(game) do
     board = :array.to_list(game.board)
 
