@@ -2,6 +2,16 @@
 
 To join, `ssh 96.126.126.44 -p 4000`, leave the password blank, and make/join a room
 
+## Deployment
+
+Use mix releases:
+```
+git clone https://github.com/mkhan45/ssh_tictactoe
+cd ssh_tictactoe
+mix release
+./_build/dev/rel/ssh_ttt/bin/ssh_ttt daemon
+```
+
 ## Architecture
 
 Something like this
