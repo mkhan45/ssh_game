@@ -34,7 +34,7 @@ defmodule CLI do
     loop do
       run_game(%TTT{})
 
-      if IO.gets("Play Again? (Y/N)\n") |> String.trim() |> String.upcase() == "N" do
+      if IO.gets("Play Again? (Y/N)\r\n") |> String.trim() |> String.upcase() == "N" do
         throw :break
       end
     end

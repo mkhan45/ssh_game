@@ -28,7 +28,7 @@ defmodule TTT do
   def display_cell(:o), do: "O"
 
   def display(%TTT{board: board, current_player: p}) do
-    display(board) <> "\n#{display_cell(p)}'s Turn"
+    display(board) <> "\r\n#{display_cell(p)}'s Turn"
   end
 
   def display(board) do
@@ -37,7 +37,7 @@ defmodule TTT do
     |> Enum.chunk_every(3)
     |> Enum.map(fn row -> Enum.map(row, &display_cell/1) end)
     |> Enum.map(&Enum.join(&1, " "))
-    |> Enum.join("\n")
+    |> Enum.join("\r\n")
   end
 
   def inspect(game) do

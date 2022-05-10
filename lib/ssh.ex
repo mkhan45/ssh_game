@@ -75,9 +75,18 @@ defmodule Client do
   end
 
   def choose_room(%Client{status: :lobby} = client) do
+    rooms = :ets.tab2list(:games) 
+            |> Stream.filter(fn {_, %{o: o}} -> o == nil end) 
+            |> Stream.map(fn {id, _} -> id end)
+
+    IO.puts(
+      "Available Rooms:\r\n" <>
+      "#{rooms |> Enum.join("\r\n")}\r\n"
+    )
+
     resp = IO.gets(
-      "1) Join a game\n" <>
-      "2) Create a game\n" <>
+      "1) Join a game\r\n" <>
+      "2) Create a game\r\n" <>
       "> "
     ) |> to_string() |> String.trim() |> Integer.parse()
 
