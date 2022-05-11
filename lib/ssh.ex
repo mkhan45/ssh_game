@@ -1,11 +1,13 @@
 defmodule RoomStore do
+  @game ConnectFour
+
   def init() do
     IO.puts("Initializing RoomStore")
     :ets.new(:games, [:named_table, :public]) |> IO.inspect()
   end
 
   def add_game(id, pid) do
-    game = %{state: %TTT{}, x: pid, o: nil}
+    game = %{state: %@game{}, x: pid, o: nil}
 
     :ets.insert(
       :games, 
@@ -41,6 +43,9 @@ defmodule RoomStore do
 end
 
 defmodule Client do
+  @game ConnectFour
+  @max_choice 6
+
   defstruct status: :lobby
 
   def prompt_room(%Client{status: :lobby} = client, creating_or_joining) do
@@ -100,13 +105,13 @@ defmodule Client do
   end
 
   def prompt_move(player) do
-    move = IO.gets("Move for #{TTT.display_cell(player)}: ") |> to_string()
+    move = IO.gets("Move for #{@game.display_cell(player)}: ") |> to_string()
     case Integer.parse(move |> String.trim()) do
-      {move, ""} when 0 <= move and move <= 8 ->
+      {move, ""} when 0 <= move and move <= @max_choice ->
         move
 
       _ ->
-        IO.puts("Please enter an index from 0 to 8.")
+        IO.puts("Please enter an index from 0 to #{@max_choice}.")
         prompt_move(player)
     end
   end
@@ -114,20 +119,20 @@ defmodule Client do
   defp game_loop(player, id) do
     receive do
       game ->
-        IO.puts(game |> TTT.display())
+        IO.puts(game |> @game.display())
 
         cond do
-          TTT.winner(game) ->
-            IO.puts("#{TTT.display_cell(game.current_player |> TTT.invert())} wins!")
+          @game.winner(game) ->
+            IO.puts("#{@game.display_cell(game.current_player |> @game.invert())} wins!")
             RoomStore.remove_game(id)
 
-          TTT.draw(game) ->
+          @game.draw(game) ->
             IO.puts("Draw game")
             RoomStore.remove_game(id)
 
           game.current_player == player ->
             move = prompt_move(player)
-            new_game_state = TTT.play(game, move)
+            new_game_state = @game.play(game, move)
             for pid <- RoomStore.players(id) do
               send(pid, new_game_state)
             end
