@@ -45,12 +45,16 @@ defmodule ConnectFour do
   end
 
   def display(board) do
-    board 
+    (0..(@width - 1) |> Enum.join(" ")) <> "\n"
+    <>
+    (board 
     |> :array.to_list 
     |> Enum.chunk_every(@width)
     |> Enum.map(fn row -> Enum.map(row, &display_cell/1) end)
     |> Enum.map(&Enum.join(&1, " "))
-    |> Enum.join("\r\n")
+    |> Enum.join("\r\n"))
+    <> "\n" <>
+    (0..(@width - 1) |> Enum.join(" "))
   end
 
   def inspect(game) do
