@@ -1,8 +1,12 @@
 defmodule TTT do
+  @behaviour Game
+
   defstruct [
     board: :array.new(size: 9, default: :empty),
     current_player: :x,
   ]
+
+  def max_choice, do: 8
 
   def invert(:x), do: :o
   def invert(:o), do: :x

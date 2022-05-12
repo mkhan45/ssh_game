@@ -1,5 +1,18 @@
+defmodule GameMod do
+  defmacro __using__(mod: game) do
+    quote do
+      @game unquote(game)
+      @max_choice unquote(game).max_choice
+
+      def init_state() do
+        %unquote(game){}
+      end
+    end
+  end
+end
+
 defmodule RoomStore do
-  @game ConnectFour
+  use GameMod, mod: ConnectFour
 
   def init() do
     IO.puts("Initializing RoomStore")
@@ -7,7 +20,7 @@ defmodule RoomStore do
   end
 
   def add_game(id, pid) do
-    game = %{state: %@game{}, x: pid, o: nil}
+    game = %{state: init_state(), x: pid, o: nil}
 
     :ets.insert(
       :games, 
@@ -43,8 +56,7 @@ defmodule RoomStore do
 end
 
 defmodule Client do
-  @game ConnectFour
-  @max_choice 6
+  use GameMod, mod: ConnectFour
 
   defstruct status: :lobby
 

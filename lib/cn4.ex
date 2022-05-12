@@ -1,4 +1,6 @@
 defmodule ConnectFour do
+  @behaviour Game
+
   @width 7
   @height 6
 
@@ -6,6 +8,8 @@ defmodule ConnectFour do
     board: :array.new(size: @width * @height, default: :empty),
     current_player: :x,
   ]
+
+  def max_choice, do: 6
 
   def invert(:x), do: :o
   def invert(:o), do: :x
