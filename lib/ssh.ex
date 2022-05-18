@@ -117,19 +117,28 @@ defmodule Client do
   end
 
   def prompt_move(player) do
-    move = IO.gets("Move for #{@game.display_cell(player)}: ") |> to_string()
-    case Integer.parse(move |> String.trim()) do
-      {move, ""} when 0 <= move and move <= @max_choice ->
-        move
-
+    resp = IO.gets("Move for #{@game.display_cell(player)}: ")
+    case resp do
+      {:error, _} -> 
+        :error
       _ ->
-        IO.puts("Please enter an index from 0 to #{@max_choice}.")
-        prompt_move(player)
+        case Integer.parse(resp |> to_string() |> String.trim()) do
+          {move, ""} when 0 <= move and move <= @max_choice ->
+            move
+
+          _ ->
+            IO.puts("Please enter an index from 0 to #{@max_choice}.")
+            prompt_move(player)
+        end
     end
   end
 
   defp game_loop(player, id) do
     receive do
+      :error ->
+        IO.puts("Game error, other player left?")
+        RoomStore.remove_game(id)
+
       game ->
         IO.puts(game |> @game.display())
 
@@ -143,16 +152,25 @@ defmodule Client do
             RoomStore.remove_game(id)
 
           game.current_player == player ->
-            move = prompt_move(player)
-            new_game_state = @game.play(game, move)
-            for pid <- RoomStore.players(id) do
-              send(pid, new_game_state)
-            end
-            game_loop(player, id)
-
-          true ->
-            game_loop(player, id)
+            case prompt_move(player) do
+              :error ->
+                IO.puts("Exiting game")
+                RoomStore.remove_game(id)
+                for pid <- RoomStore.players(id) do
+                  send(pid, :error)
+                end
+                Process.exit(self(), 0)
+              move ->
+                new_game_state = @game.play(game, move)
+                for pid <- RoomStore.players(id) do
+                  send(pid, new_game_state)
+                end
         end
+        game_loop(player, id)
+
+      true ->
+        game_loop(player, id)
+      end
     end
   end
 
