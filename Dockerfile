@@ -1,8 +1,9 @@
-FROM hexpm/elixir:1.13.3-erlang-24.3.4-alpine-3.14.5 as builder
+FROM staging as builder
 
 COPY . /src
 WORKDIR /src
 
+RUN rm -rf _build
 RUN MIX_ENV=prod mix release
 
 FROM hexpm/elixir:1.13.3-erlang-24.3.4-alpine-3.14.5

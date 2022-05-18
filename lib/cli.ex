@@ -31,6 +31,7 @@ defmodule CLI do
   end
 
   def run() do
+    IO.puts("Starting Game")
     loop do
       run_game(%TTT{})
 
