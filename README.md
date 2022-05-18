@@ -1,13 +1,13 @@
-# SSH TicTacToe
+# SSH Games
 
-To join, `ssh 96.126.126.44 -p 4000`, leave the password blank, and make/join a room
+To join a connect four game, `ssh ssh ssh-game.fly.dev`, leave the password blank, and make/join a room
 
 ## Deployment
 
 Use mix releases:
 ```
-git clone https://github.com/mkhan45/ssh_tictactoe
-cd ssh_tictactoe
+git clone https://github.com/mkhan45/ssh_game
+cd ssh_game
 mix release
 ./_build/dev/rel/ssh_ttt/bin/ssh_ttt daemon
 ```
