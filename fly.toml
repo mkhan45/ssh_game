@@ -1,0 +1,37 @@
+# fly.toml file generated for ssh-game on 2022-05-18T01:46:49-04:00
+
+app = "ssh-game"
+
+kill_signal = "SIGINT"
+kill_timeout = 5
+processes = []
+
+[env]
+
+[[services]]
+  internal_port = 4000
+  protocol = "tcp"
+
+  [services.concurrency]
+    hard_limit = 25
+    soft_limit = 20
+    type = "connections"
+
+  [[services.ports]]
+     handlers = []
+     port = 22
+
+  # [[services.ports]]
+  #   force_https = true
+  #   handlers = ["http"]
+  #   port = 80
+
+  # [[services.ports]]
+  #   handlers = ["tls", "http"]
+  #   port = 443
+
+  # [[services.tcp_checks]]
+  #   grace_period = "1s"
+  #   interval = "15s"
+  #   restart_limit = 0
+  #   timeout = "2s"

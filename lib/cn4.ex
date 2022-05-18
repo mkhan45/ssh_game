@@ -41,8 +41,8 @@ defmodule ConnectFour do
   end
 
   def display_cell(:empty), do: "."
-  def display_cell(:x), do: "X"
-  def display_cell(:o), do: "O"
+  def display_cell(:x), do: "\u001b[31mX\u001b[0m"
+  def display_cell(:o), do: "\u001b[33mO\u001b[0m"
 
   def display(%ConnectFour{board: board, current_player: p}) do
     display(board) <> "\r\n#{display_cell(p)}'s Turn"

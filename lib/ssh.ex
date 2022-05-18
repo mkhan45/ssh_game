@@ -231,6 +231,7 @@ defmodule SSHServer do
       port, 
       system_dir: 'ssh_dir', 
       password: '',
+      # auth_methods: 'none',
       shell: &on_shell/2
     )
   end
