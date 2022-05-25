@@ -60,17 +60,17 @@ defmodule Client do
 
   defstruct status: :lobby
 
-  def prompt_room(%Client{status: :lobby} = client, creating_or_joining) do
+  def prompt_room(%Client{status: creating_or_joining} = client) do
     resp = IO.gets("Room # (0 to go back): ") |> to_string() |> String.trim() |> Integer.parse()
     case resp do
       {0, ""} ->
-        choose_room(client)
+        choose_room(%Client{status: :lobby})
 
       {room_no, ""} ->
         case {RoomStore.game_exists(room_no), creating_or_joining} do
           {false, :joining} ->
             IO.puts("Room #{room_no} does not exist")
-            prompt_room(client, :joining)
+            prompt_room(client)
 
           {true, :joining} ->
             IO.puts("Joined room #{room_no}")
@@ -82,12 +82,12 @@ defmodule Client do
 
           {true, :creating} ->
             IO.puts("Room #{room_no} already exists")
-            prompt_room(client, :creating)
+            prompt_room(client)
         end
 
       _ ->
         IO.puts("Please enter a valid number")
-        prompt_room(client, creating_or_joining)
+        prompt_room(client)
     end
   end
 
@@ -108,8 +108,8 @@ defmodule Client do
     ) |> to_string() |> String.trim() |> Integer.parse()
 
     case resp do
-      {1, ""} -> prompt_room(client, :joining)
-      {2, ""} -> prompt_room(client, :creating)
+      {1, ""} -> prompt_room(%Client{status: :joining})
+      {2, ""} -> prompt_room(%Client{status: :creating})
       _ ->
         IO.puts("Please enter either 1 or 2")
         choose_room(client)
