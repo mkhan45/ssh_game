@@ -250,6 +250,8 @@ defmodule SSHServer do
       system_dir: 'ssh_dir', 
       password: '',
       # auth_methods: 'none',
+      auth_method_kb_interactive_data: {'SSH Connect 4', 'Enter Username', 'Username: ', true},
+      pwdfun: fn _, _ -> true end,
       shell: &on_shell/2
     )
   end
